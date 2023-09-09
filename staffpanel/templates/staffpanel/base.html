@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="shortcut icon" href='{% static "/studywithus/favicon.ico" %}' type="image/x-icon">
+    {% block extracss %}
+    {% endblock extracss %}
+    <title>{% block title %}
+        {% endblock title %} | Learn from experts,Improve knowledge with mock tests</title>
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px #007bff;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 30px;
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            margin-bottom: 0px;
+        }
+        /* Footer*/
+        .blog-footer {
+            padding: 2.5rem 0;
+            color: #999;
+            text-align: center;
+            background-color: #e9ecef;
+            border-top: .05rem solid #e5e5e5;
+        }
+
+        .blog-footer p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/staffpanel"><strong>Staff Panel</strong></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% block active1 %}
+                        {% endblock active1 %}" aria-current="page" href="/staffpanel">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block active2 %}
+                        {% endblock active2 %}" href="/staffpanel/displaycontent">Teaching</a>
+                    </li>
+                </ul>
+                {% if user.is_authenticated and user.is_staff%}
+                <ul class="navbar-nav ml-1 mr-2">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Welcome {{request.user}}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/staffpanel/staffprofile">Profile</a>
+                            <form action="/staffpanel/stafflogout" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+                {% else %}
+                <a href="/staffpanel/stafflogin" class="btn btn-outline-success mx-1" type="submit">Login</a>
+                <a href="/staffpanel/staffsignup" class="btn btn-success" type="submit">Signup</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% block body %}
+    {% endblock body %}
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+        integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/433888fe69.js" crossorigin="anonymous" defer></script>
+    {% block jss %}
+    {% endblock jss %}
+</body>
+</html>

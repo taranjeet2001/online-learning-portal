@@ -1,0 +1,304 @@
+{% extends "staffpanel/base.html" %}
+{% block title %}User Profile
+{% endblock title %}
+{% block body %}
+{% load static %}
+<style>
+    body {
+        background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    }
+
+    .emp-profile {
+        padding: 3%;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        border-radius: 0.5rem;
+        background: #fff;
+    }
+
+    .profile-img {
+        text-align: center;
+    }
+
+    .profile-img img {
+        width: 70%;
+        height: 100%;
+    }
+
+    .profile-img .file {
+        position: relative;
+        overflow: hidden;
+        margin-top: -20%;
+        width: 70%;
+        border: none;
+        border-radius: 0;
+        font-size: 15px;
+        background: #212529b8;
+    }
+
+    .profile-img .file input {
+        position: absolute;
+        opacity: 0;
+        right: 0;
+        top: 0;
+    }
+
+    .profile-head h5 {
+        color: #333;
+    }
+
+    .profile-head h6 {
+        color: #0062cc;
+    }
+
+    .profile-edit-btn {
+        border: none;
+        border-radius: 1.5rem;
+        width: 70%;
+        padding: 2%;
+        font-weight: 600;
+        color: #6c757d;
+        cursor: pointer;
+    }
+
+    .proile-rating {
+        font-size: 12px;
+        color: #818182;
+        margin-top: 5%;
+    }
+
+    .proile-rating span {
+        color: #495057;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .profile-head .nav-tabs {
+        margin-bottom: 5%;
+    }
+
+    .profile-head .nav-tabs .nav-link {
+        font-weight: 600;
+        border: none;
+    }
+
+    .profile-head .nav-tabs .nav-link.active {
+        border: none;
+        border-bottom: 2px solid #0062cc;
+    }
+
+    .profile-work {
+        padding: 14%;
+        margin-top: -15%;
+    }
+
+    .profile-work p {
+        font-size: 12px;
+        color: #818182;
+        font-weight: 600;
+        margin-top: 10%;
+    }
+
+    .profile-work a {
+        text-decoration: none;
+        color: #495057;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .profile-work ul {
+        list-style: none;
+    }
+
+    .profile-tab label {
+        font-weight: 600;
+    }
+
+    .profile-tab p {
+        font-weight: 600;
+        color: #0062cc;
+    }
+
+    .editprofile a {
+        text-decoration: none;
+    }
+</style>
+<div class="container emp-profile">
+    {% for info in userinfo %}
+    <div class="row">
+        <div class="col-md-2">
+            <form method="POST">
+                {% if info.gender == 'Male' %}
+                <div class="profile-img">
+                    <img src="{% static '/app/additional/malelogo.png' %}" alt="" />
+                    <div class="file btn btn-lg btn-primary">
+                        Change Photo
+                        <input type="file" type="submit" name="file" disabled />
+                    </div>
+                </div>
+                {% else %}
+                <div class="profile-img">
+                    <img src="{% static '/app/additional/malelogo.png' %}" alt="" />
+                    <div class="file btn btn-lg btn-primary">
+                        Change Photo
+                        <input type="file" type="submit" name="file" disabled />
+                    </div>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="profile-head">
+                <h5>
+                    {{info.name}}
+                </h5>
+                <p class="proile-rating">Last Login: <span>{{request.user.last_login}}</span></p>
+            </div>
+        </div>
+        <div class="col-md-4 editprofile">
+            <a href="#" class="btn btn-sm btn-primary">Edit</a>
+            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#passwordmodal">Change
+                Password</button>
+        </div>
+    </div>
+    <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                aria-selected="true">About</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                aria-selected="false">Subjects</a>
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tab-content profile-tab" id="myTabContent">
+                <div class="tab-pane fade show active mt-2" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>User Id</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{request.user}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{info.name}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Email</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{request.user.email}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Phone</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{info.phone}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Gender</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{info.gender}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Address:</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{info.address}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>State:</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{info.state}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Pin code:</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>{{info.zipcode}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row mb-1">
+                        <div class="col-md-3">
+                            <label>Semester</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Subject</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Group</label>
+                        </div>
+                    </div>
+                    {% for subj in subjects %}
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>{{subj.semester}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{subj.subject}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{subj.group}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!-- Modal -->
+<div class="modal fade" id="passwordmodal" tabindex="-1" role="dialog" aria-labelledby="passwordmodalrequest"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Change Password: {{request.user}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/staffpanel/changepassword" method='POST'>
+            {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="cpassword">Confirm Password</label>
+                        <input type="password" class="form-control" id="cpassword" name="cpassword">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}

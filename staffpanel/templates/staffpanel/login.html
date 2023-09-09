@@ -1,0 +1,164 @@
+{% extends "staffpanel/base.html" %}
+{% block title %}Staff Login
+{% endblock title %}
+{% block extracss %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/login/vendor/bootstrap/css/bootstrap.min.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'app/login/fonts/font-awesome-4.7.0/css/font-awesome.min.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'app/login/fonts/Linearicons-Free-v1.0.0/icon-font.min.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'app/login/vendor/animate/animate.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'app/login/vendor/css-hamburgers/hamburgers.min.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'app/login/vendor/select2/select2.min.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'app/login/css/util.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'app/login/css/main.css'%}">
+<style>
+	/* width */
+	::-webkit-scrollbar {
+		width: 5px;
+	}
+
+	/* Track */
+	::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 5px #007bff;
+		border-radius: 10px;
+	}
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: #007bff;
+		border-radius: 30px;
+	}
+</style>
+{% endblock extracss %}
+{% block body %}
+<div class="limiter" style="background-color: #d43f8d;">
+	<div class="container-login100">
+		<div class="wrap-login100 p-l-50 p-r-50 p-t-77 p-b-30">
+			<form class="login100-form validate-form" method="POST" action="/staffpanel/handlestafflogin">
+				{% csrf_token %}
+				<span class="login100-form-title p-b-55">
+					<a href="/staffpanel" class="btn btn-m btn-outline-primary">Open Book</a>
+				</span>
+				<span class="login100-form-title p-b-55">
+					Staff Login
+				</span>
+
+				<div class="wrap-input100 validate-input m-b-16" data-validate="User name is required">
+					<input class="input100" type="text" name="suser" value="prof1" placeholder="User name">
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<span class="lnr lnr-user"></span>
+					</span>
+				</div>
+				<div class="wrap-input100 validate-input m-b-16" data-validate="Password is required">
+					<input class="input100" type="password" name="spassword" value="Abcd1234@#" placeholder="Password">
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<span class="lnr lnr-lock"></span>
+					</span>
+				</div>
+				<div class="contact100-form-checkbox m-l-4">
+					<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+					<label class="label-checkbox100" for="ckb1">
+						Remember me
+					</label>
+				</div>
+				<div class="container-login100-form-btn p-t-25">
+					<button class="login100-form-btn">
+						Login
+					</button>
+				</div>
+
+				<div class="text-center w-full p-t-42 p-b-22">
+					<span class="txt1">
+						Or login with
+					</span>
+				</div>
+				<a href="#" class="btn-face m-b-10">
+					<i class="fa fa-facebook-official"></i>
+					Facebook
+				</a>
+				<a href="#" class="btn-google m-b-10">
+					<img src="{% static 'app/login/images/icons/icon-google.png' %}" alt="GOOGLE">
+					Google
+				</a>
+				<div class="text-center w-full p-t-115">
+					<span class="txt1">
+						Forgot Password?
+					</span>
+					<button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+						data-target="#passwordReset">Reset Now</button>
+					<br>
+					<span class="txt1">
+						Not a member?
+					</span>
+					<a class="txt1 bo1 hov1" href="/staffpanel/staffsignup">
+						Sign up now
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="passwordReset" tabindex="-1" role="dialog" aria-labelledby="resetbutton" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Reset Password</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form action="/app/passwordreset" method="POST">
+			{% csrf_token %}
+			<input type="hidden" name="urltoback" id="urltobackreply" value="{{ request.META.PATH_INFO }}">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="email">Your Email</label>
+							<input type="email" class="form-control" id="email" placeholder="Enter your Email"
+								name="email">
+							<small id="otpMessage" class="form-text"></small>
+						</div>
+						<div class="col-md-4" style="padding-top: 26px!important;">
+							<button class="btn btn-danger btn-sm" id="otpbtn">Send OTP</button>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-md-12">
+							<label for="otpverify">Your Otp</label>
+							<input type="text" class="form-control" id="otpverify" placeholder="Enter your Otp"
+								name="otp">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label for="password">New Password</label>
+							<input type="password" class="form-control" id="password" placeholder="**************"
+								name="password">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label for="cpassword">Confirm Password</label>
+							<input type="password" class="form-control" id="cpassword" placeholder="**************"
+								name="cpassword">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script src="{% static 'app/login/vendor/jquery/jquery-3.2.1.min.js'%}"></script>
+<script src="{% static 'app/login/vendor/bootstrap/js/popper.js'%}"></script>
+<script src="{% static 'app/login/vendor/bootstrap/js/bootstrap.min.js'%}"></script>
+<script src="{% static 'app/login/vendor/select2/select2.min.js'%}"></script>
+<script src="{% static 'app/login/js/main.js'%}"></script>
+<script src="{% static 'app/login/js/smooth-scroll.js'%}"></script>
+{% endblock body %}

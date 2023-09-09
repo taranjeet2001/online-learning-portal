@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+    <style>
+        #custom-button {
+            padding: 10px;
+            color: white;
+            background-color: #009578;
+            border: 1px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #custom-button:hover {
+            background-color: #00b28f;
+        }
+
+        #custom-text {
+            margin-left: 10px;
+            font-family: sans-serif;
+            color: #aaa;
+        }
+                /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px #007bff;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 30px;
+        }
+        .customimg:hover{
+            cursor: pointer;
+            border: 2px solid blue;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
+        Launch static backdrop modal
+    </button>
+    <div class="container">
+        <form>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">user</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Email address</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+              <button class="btn btn-outline-secondary" type="button">Add IMG</button>
+            </div>
+            <div class="input-group">
+                <div class="custom-file">
+                  <input type="text" class="custom-file-input" required>
+                </div>
+                <div class="input-group-append">
+                </div>
+              </div>
+          </form>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade modal-dialog modal-dialog-scrollable" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">File Uploader for {{request.user}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#uploader" role="tab"
+                                aria-controls="home" aria-selected="true">Uploader</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#folder" role="tab"
+                                aria-controls="profile" aria-selected="false">Folder</a>
+                        </li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="tab-content profile-tab" id="myTabContent">
+                                <div class="tab-pane fade show active mt-2" id="uploader" role="tabpanel"
+                                    aria-labelledby="home-tab">
+                                    <form enctype="multipart/form-data" method="POST" action="#" id="imageuploader">
+                                        {% csrf_token %}
+                                        <input type="file" id="real-file" accept="image/*" name="image"
+                                            hidden="hidden" />
+                                        <button type="button" id="custom-button">CHOOSE A IMG</button>
+                                        <p><span id="custom-text">No file chosen, yet.</span></p>
+                                        <p><strong>Note: </strong><em>Allowed File size 5MB maximum</em></p>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="folder" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div class="row">
+                                    {% for image in images %}
+                                        <div class="col-md-4">
+                                            <img src="/media/{{image.image}}" alt="image" class="img-thumbnail customimg">
+                                        </div>
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div id="message">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <script>
+        $('#imageuploader').submit(function (event) {
+            event.preventDefault();
+            $form = $(this)
+            var formData = new FormData(this);
+            $.ajax({
+                url: '/utils/uploadsystem',
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+            })
+                .done(function (data) {
+                    $('input[name=image]').val('')
+                    $('#message').empty()
+                    if (data.startsWith("Error")) {
+                        $('#message').append(`<span class="float-right text-danger">${data}</span>`)
+                    }
+                    else {
+                        $('#message').append(`<span class="float-right text-success">${data}</span>`)
+                    }
+                });
+        });
+    </script>
+    <script>
+        const realFileBtn = document.getElementById("real-file");
+        const customBtn = document.getElementById("custom-button");
+        const customTxt = document.getElementById("custom-text");
+
+        customBtn.addEventListener("click", function () {
+            realFileBtn.click();
+        });
+
+        realFileBtn.addEventListener("change", function () {
+            if (realFileBtn.value) {
+                customTxt.innerHTML = realFileBtn.value.match(
+                    /[\/\\]([\w\d\s\.\-\(\)]+)$/
+                )[1];
+            } else {
+                customTxt.innerHTML = "No file chosen, yet.";
+            }
+        });
+    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+{% extends "app/base.html" %}
+{% block title %}Open Book
+{% endblock title %}
+{% block active1 %}active
+{% endblock active1 %}
+{% block body %}
+{% load static %}
+<div class="container-fluid mt-2">
+<div class="jumbotron">
+  <h1 class="display-4">Welcome to Open Book</h1>
+  <p class="lead">New Initiative for students to learn and upgrade their skills online with open book</p>
+  <hr class="my-4">
+  <p><em>“Engineering stimulates the mind. Kids get bored easily. They have got to get out and get their hands dirty; make things, dismantle things, fix things. When the schools can offer that, you’ll have an engineer for life.”</em></p>
+  <p><strong>– Bruce Dickinson (airline pilot, musician)</strong></p>
+  <a class="btn btn-primary btn-lg" href="/app/learning" role="button">Online Classes</a>
+  <a class="btn btn-success btn-lg" href="/blog" role="button">Best Books</a>
+</div>
+<div class="container">
+    <div class="row mt-4">
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded" style="width: 18rem;">
+            <img src="{% static '/app/additional/coding.jpg' %}" class="padded card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">Learn Coding</h5>
+                <p class="card-text text-center">Team working hard to provide you data,books for free learn by investing your time</p>
+                <a href="#" class="btn btn-primary d-block">Start Now</a>
+            </div>
+        </div>
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded" style="width: 18rem;">
+            <img src="{% static '/app/additional/hacking.jpg' %}" class="padded card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">Learn Hacking</h5>
+                <p class="card-text text-center">Hacking is not just of four types it include infinty data start learning now</p>
+                <a href="#" class="btn btn-primary d-block">Start Now</a>
+            </div>
+        </div>
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded" style="width: 18rem;">
+            <img src="{% static '/app/additional/otherlearning.jpg' %}" class="padded card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">Other Stuff</h5>
+                <p class="card-text text-center">Why pay for learning when you get it free here start now with online stuffs free pdfs,videos in hindi</p>
+                <a href="#" class="btn btn-primary d-block">Must Visit</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<footer class="blog-footer">
+        <p>Operated by Open Book Team<a href="https://learninteam.com/" target="_blank"> Open Book </a> 
+            {% comment %} by <a
+                href="https://instagram.com/computewithlucifer" target="_blank">Computewithlucifer</a>. {% endcomment %}
+            </p>
+        <p>
+        <p>&copy; Copyright All Rights Reserved Open Book</p>
+        <a href="#">Back to top</a>
+        </p>
+</footer>
+{% endblock body %}

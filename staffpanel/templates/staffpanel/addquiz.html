@@ -1,0 +1,300 @@
+{% extends "staffpanel/base.html" %}
+{% block title %}Quizz add
+{% endblock title %}
+{% block active2 %}active
+{% endblock active2 %}
+{% block body %}
+{% load static %}
+<!-- some info for ajax data -->
+<p hidden id="chapter">{{chapter}}</p>
+<p hidden id="subject">{{subject}}</p>
+<p hidden id="group">{{group}}</p>
+<p hidden id="topic">{{topic}}</p>
+<div class="container mt-2">
+    <h1 class="text-center">{{subject}} Quizz</h1>
+    <hr>
+    <div class="container mt-1">
+        <p><strong>Topic: </strong>{{topic}}</p>
+        <form action="#" id="addquestion" method="POST">
+            {% csrf_token %}
+            <div class="row border">
+                <div class="col-md-12">
+                    <div class="form-group mt-1 pt-3">
+                        <input type="text" class="form-control" id="Question" name="question" placeholder="Question">
+                    </div>
+                </div>
+                <div class="col-md-12 pl-5">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="option1" name="option1" placeholder="Option 1">
+                    </div>
+                </div>
+                <div class="col-md-12 pl-5">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="option2" name="option2" placeholder="Option 2">
+                    </div>
+                </div>
+                <div class="col-md-12 pl-5">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="option3" name="option3" placeholder="Option 3">
+                    </div>
+                </div>
+                <div class="col-md-12 pl-5">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="option4" name="option4" placeholder="Option 4">
+                    </div>
+                </div>
+                <div class="col-md-2 pl-5">
+                    <div class="form-group">
+                        <label for="currectoption">Correct Answer</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <select class="form-control" id="currectoption" name="currectoption">
+                            <option>option1</option>
+                            <option>option2</option>
+                            <option>option3</option>
+                            <option>option4</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input class="form-control" type="number" id="currectoption" name="marks" placeholder="Marks"
+                            value="1">
+                    </div>
+                </div>
+                <div class="col-md-12 pl-5">
+                    <div class="form-group" id="addques">
+                        <button type="submit" class="btn btn-sm btn-success float-right mb-2">Add Question</button>
+                    </div>
+                    <div id="messages">
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container mt-1">
+    <div class="row border" id="displayquestions">
+
+    </div>
+</div>
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edit Question</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/exam/questionupdate" method="POST" id="questionadder">
+                    {% csrf_token %}
+                    <input type="hidden" name="urltoback" id="urltobackreply" value="{{ request.META.PATH_INFO }}">
+                    <div id="sno">
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mt-1 pt-3">
+                                <input type="text" class="form-control" id="eQuestion" name="Question"
+                                    placeholder="Question">
+                            </div>
+                        </div>
+                        <div class="col-md-12 pl-5">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="eoption1" name="Option1"
+                                    placeholder="Option 1">
+                            </div>
+                        </div>
+                        <div class="col-md-12 pl-5">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="eoption2" name="Option2"
+                                    placeholder="Option 2">
+                            </div>
+                        </div>
+                        <div class="col-md-12 pl-5">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="eoption3" name="Option3"
+                                    placeholder="Option 3">
+                            </div>
+                        </div>
+                        <div class="col-md-12 pl-5">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="eoption4" name="Option4"
+                                    placeholder="Option 4">
+                            </div>
+                        </div>
+                        <div class="col-md-4 pl-5">
+                            <div class="form-group">
+                                <label for="currectoption">Answer</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select class="form-control" id="ecurrectoption" name="Currectoption">
+                                    <option>Option1</option>
+                                    <option>Option2</option>
+                                    <option>Option3</option>
+                                    <option>Option4</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input class="form-control" type="number" id="emarks" name="Marks" placeholder="Marks">
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+{% block jss %}
+<script>
+    getquizz()
+    function getquizz() {
+        $('#displayquestions').empty()
+        var formdata = {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            'group': $('#group').text(),
+            'subject': $('#subject').text(),
+            'chapter': $('#chapter').text(),
+            'topic': $('#topic').text(),
+        };
+        $.ajax({
+            type: "POST",
+            url: '/exam/displayquestions',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                data = JSON.parse(data)
+                updates = data[0]
+                $('#quizzdata').empty();
+                for (i = 0; i < updates.length; i++) {
+                    let sno = updates[i]['sno']
+                    let question = updates[i]['question']
+                    if (sno == "nothing") {
+                        mystr = `<div class="col-md-12">
+                            <p class="pt-1"><strong>Add atleast two questions</strong></p>
+                        </div>`
+                        $('#displayquestions').append(mystr);
+                        break;
+                    }
+                    mystr = `<div class="col-md-12">
+                            <p class="pt-1"><strong>Question: </strong><span>${question}</span><span class="float-right"><button type="button" id="0" class="btn btn-primary mx-1" onclick="getquestionmodel(${sno})">
+                                Edit
+                            </button></span><span class="float-right"><button type="button" id="0" class="btn btn-danger" onclick="deletequestion(${sno})">
+                                Delete
+                            </button></span></p>
+                        </div>`
+                    $('#displayquestions').append(mystr);
+                }
+            });
+    }
+    $('#addquestion').submit(function (event) {
+        $('#addques').empty()
+        $('#messages').empty()
+        $('#addques').append(`<button class="btn btn-sm btn-success float-right mb-2">
+        <i class="fa fa-spinner fa-spin"></i>Adding
+    </button>`)
+        var formdata = {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            'group': $('#group').text(),
+            'subject': $('#subject').text(),
+            'chapter': $('#chapter').text(),
+            'topic': $('#topic').text(),
+            'question': $('input[name=question]').val(),
+            'option1': $('input[name=option1]').val(),
+            'option2': $('input[name=option2]').val(),
+            'option3': $('input[name=option3]').val(),
+            'option4': $('input[name=option4]').val(),
+            'marks': $('input[name=marks]').val(),
+            'answer': $('select[name=currectoption]').val(),
+        };
+        $.ajax({
+            type: "POST",
+            url: '/exam/addquestion',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                if (data == 'success') {
+                    $('#messages').append(`<strong>Note: </strong><span class="text-success">Added successfully continue with other</span>`)
+                }
+                else {
+                    $('#messages').append(`<strong>Note: </strong><span class="text-danger">Faild to Add please try again</span>`)
+                }
+            });
+        $('#addques').empty()
+        $('#addques').append(`<button type="submit" class="btn btn-sm btn-success float-right mb-2">Add Question</button>`)
+        $('input[name=question]').val("")
+        $('input[name=option1]').val("")
+        $('input[name=option2]').val("")
+        $('input[name=option3]').val("")
+        $('input[name=option4]').val("")
+        $('input[name=marks]').val("1")
+        getquizz()
+        event.preventDefault();
+    });
+</script>
+<script>
+    function getquestionmodel(sno) {
+        var formdata = {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            "sno": sno,
+        };
+        $.ajax({
+            type: "POST",
+            url: '/exam/fetchquestion',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                data = JSON.parse(data)
+                updates = data[0]
+                $('input[name=Question]').val(updates[0]['question'])
+                $('input[name=Option1]').val(updates[0]['option1'])
+                $('input[name=Option2]').val(updates[0]['option2'])
+                $('input[name=Option3]').val(updates[0]['option3'])
+                $('input[name=Option4]').val(updates[0]['option4'])
+                $('input[name=Marks]').val(updates[0]['marks'])
+                $('#sno').append(`<input type="hidden" name="sno" value="${sno}">`)
+                $('#staticBackdrop').modal('toggle')
+            });
+    }
+    function deletequestion(sno){
+        var res = confirm('Are you sure want to delete this question')
+        if(res == true){
+            var formdata = {
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                'urltoback': $('input[name=urltoback]').val(),
+                "sno": sno,
+            };
+            $.ajax({
+                type: "POST",
+                url: '/exam/deletequestion',
+                data: formdata,
+                encode: true
+            })
+            .done(function (data) {
+                location.reload(true);
+            });
+        }
+        else{
+            //do nothing
+        }
+    }
+</script>
+{% endblock jss %}

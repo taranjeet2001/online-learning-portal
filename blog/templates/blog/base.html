@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@387&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href='{% static '/studywithus/favicon.ico' %}' type="image/x-icon">
+    <title>{% block title %}
+        {% endblock title %} | Learn from experts,Improve knowledge with mock tests</title>
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px #007bff;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 30px;
+        }
+
+        /* Footer*/
+        .blog-footer {
+            padding: 2.5rem 0;
+            color: #999;
+            text-align: center;
+            background-color: #e9ecef;
+            border-top: .05rem solid #e5e5e5;
+        }
+
+        .blog-footer p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <style>
+        .jumbotron {
+            padding: 80px 20px;
+            background-color: #e9ecef;
+        }
+
+        .badge-success {
+            color: #fff;
+            background-color: #28a745
+        }
+
+        a.badge-success:focus,
+        a.badge-success:hover {
+            color: #fff;
+            background-color: #1e7e34
+        }
+
+        a.badge-success.focus,
+        a.badge-success:focus {
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(40, 167, 69, .5)
+        }
+    </style>
+    {% block extracss %}
+    {% endblock extracss %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid m-0 p-0">
+            <a class="navbar-brand" href="/blog"><strong>Learn Skills Blog</strong></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% block active1 %}
+                        {% endblock active1 %}" aria-current="page" href="/blog">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block active2 %}
+                        {% endblock active2 %}" href="/blog/posts">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block active3 %}
+                        {% endblock active3 %}" href="/blog/videos">Videos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block active4 %}
+                        {% endblock active4 %}" href="/blog/softwares">Softwares</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0" action="/blog/search/" method="GET">
+                    <input class="form-control mr-sm-2" type="search" name="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0 mr-1" type="submit">Search</button>
+                </form>
+                {% if request.user.is_authenticated %}
+                <ul class="navbar-nav ml-1 mr-2">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Welcome {{request.user}}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% if request.user.is_staff %}
+                            <a class="dropdown-item" href="/staffpanel/staffprofile">Profile</a>
+                            <form action="/staffpanel/stafflogout" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+                            {% else %}
+                            <a class="dropdown-item" href="/app/userprofile">Profile</a>
+                            <form action="/app/logout" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+                {% else %}
+                <a href="/app/userlogin" class="btn btn-success" type="submit">Student Login</a>
+                <a href="/staffpanel/stafflogin" class="btn btn-danger mx-1" type="submit">Staff Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% block body %}
+    {% endblock body %}
+    <footer class="blog-footer">
+        <p>Operated by learnskills Team<a href="https://learninteam.com/" target="_blank"> Learn Skills </a> by <a
+                href="https://instagram.com/computewithlucifer" target="_blank">Computewithlucifer</a>.</p>
+        <p>
+        <p>&copy; 2020-2021 Copyright All Rights Reserved learnskills</p>
+        <p><a href="#" class="badge badge-success">Privacy Policies</a><a href="#" class="badge badge-success mx-1">Terms Conditions</a></p>
+        <a href="#" class="btn btn-sm btn-primary">Back to top</a>
+        </p>
+    </footer>
+    <!-- google rechaptcha code -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+        integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+        crossorigin="anonymous"></script>
+    {% block jss %}
+    {% endblock jss %}
+</body>
+
+</html>

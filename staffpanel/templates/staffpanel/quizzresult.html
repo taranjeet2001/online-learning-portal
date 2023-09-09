@@ -1,0 +1,102 @@
+{% extends "staffpanel/base.html" %}
+{% block title %}{{group}} - Students Quizz Result
+{% endblock title %}
+{% block body %}
+{% load mathfilters %}
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+<div class="container mt-3">
+    <h2 class="text-center">Students Quizz Result</h2>
+    <h4><strong>Group: </strong>{{group}}</h4>
+    <p><strong>Note: </strong><em>Page is not suitable for mobile view.</em></p>
+    <table class="table table-striped" id="datatable">
+        <thead>
+            <tr>
+                <th scope="col">UNI Roll No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Marks</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        {% for student in students %}
+        <tbody>
+            <tr>
+                <td scope="row">{{student.uniroll}}</td>
+                <td>{{student.name}}</td>
+                <td>{{student.email}}</td>
+                <td class="text-center">{% if student.marks < student.totalmarks|div:3 %}<span id=""
+                    class="testmarks float-right mx-1 badge badge-danger" style="margin-top: 7px;">{{student.marks}}/{{student.totalmarks}} </span>{% else %}<span id=""
+                    class="testmarks float-right mx-1 badge badge-success" style="margin-top: 7px;">{{student.marks}}/{{student.totalmarks}}</span>{% endif %}</td>
+                <td><button type="button" id='{{student.crollno}}' class="btn btn-primary btn-sm sendmail float-right">Send Mail</button></td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+<!-- mail sending modal -->
+<div class="modal fade" id="mailmodal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="studentname"><strong>Mail to: </strong> <span id="studentnamehere"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/utils/sendmail" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="urltoback" id="urltoback" value="{{ request.META.PATH_INFO }}">
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" name="rollno" id="rollno" readonly>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" name="sname" id="sname" readonly>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input type="email" class="form-control" name="email" id="email" readonly>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" name="profname" id="profname"
+                            placeholder="Please enter your name" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <textarea type="text" class="form-control" name="message" id="message"
+                            placeholder="Message for student" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Send Now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+{% block jss %}
+<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#datatable').DataTable();
+    });
+</script>
+<script>
+    edits = document.getElementsByClassName('sendmail');
+    Array.from(edits).forEach((element) => {
+        element.addEventListener('click', (e) => {
+            tr = e.target.parentNode.parentNode;
+            Rollno = tr.getElementsByTagName('td')[0].innerText;
+            Name = tr.getElementsByTagName('td')[1].innerText;
+            Email = tr.getElementsByTagName('td')[2].innerText;
+            rollno.value = Rollno;
+            sname.value = Name;
+            $('#studentnamehere').html(Name);
+            email.value = Email;
+            $('#mailmodal').modal('toggle')
+        })
+    })
+</script>
+{% endblock jss %}

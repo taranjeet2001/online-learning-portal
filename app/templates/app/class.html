@@ -1,0 +1,401 @@
+{% extends "app/base.html" %}
+{% block title %}Class
+{% endblock title %}
+{% block active1 %}active
+{% endblock active1 %}
+{% block body %}
+{% load static %}
+{% load humanize %}
+{% load get_dict %}
+<link rel="stylesheet" href="{% static 'app/prism/prism.css'%}">
+<style>
+    code[class*="language-"],
+    pre[class*="language-"] {
+        max-height: 614px;
+    }
+
+    .commentContainer {
+        overflow-x: auto;
+    }
+</style>
+<style>
+    .content-holder {
+        list-style: none;
+        padding: 0;
+    }
+
+
+    .content-holder a {
+        color: black;
+        text-decoration: none;
+    }
+
+    .content-holder li:hover {
+        background-color: rgb(239, 239, 240)
+    }
+
+    .content-holder-item {
+        padding: 23px 12px;
+        font-size: 16px;
+    }
+
+    li.active {
+        background-color: rgb(214, 214, 214);
+    }
+
+    .bg-black {
+        background-color: black;
+    }
+
+    /* #video-box {
+        overflow-y: scroll;
+    } */
+
+    #content-box {
+        max-height: 85vh;
+        overflow-y: scroll;
+
+    }
+
+    #course-content-box {
+        align-self: flex-start;
+        height: 20px;
+        position: sticky;
+        top: 0;
+    }
+
+    .bg-lgrey {
+        background-color: rgb(231, 231, 233);
+    }
+</style>
+
+<style>
+    .tab-pane {
+        min-height: 344px;
+    }
+
+    .nav-link {
+        font-weight: bold;
+        color: black
+    }
+</style>
+
+<style>
+    .commentReplies {
+        background-color: rgb(231, 231, 233);
+        margin: 18px 3px;
+    }
+
+    .commentReplies img {
+        margin: 8px 14px;
+    }
+</style>
+<style>
+    #toggleCourse {
+        display: none;
+    }
+
+    .openCourseHeight {
+        height: 76vh !important;
+    }
+
+    @media only screen and (max-width: 400px) {
+        .nav-link {
+            font-size: 16px;
+            padding: 9px 6px;
+        }
+
+        #course-content-box {
+            height: 57px;
+        }
+    }
+
+    @media only screen and (max-width: 560px) {
+        img.rounded-circle {
+            height: 0px;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        #course-content-box {
+            height: 46px;
+            transition: height 0.4s;
+            position: static;
+        }
+
+        #content-box {
+            height: 70vh;
+            visibility: hidden;
+        }
+
+        #toggle-button {
+            visibility: visible;
+        }
+
+        #video-box {
+            z-index: 1;
+        }
+
+        #sticky-d {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        #toggleCourse {
+            display: inline;
+        }
+
+        .other {
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+    }
+</style>
+<div class="container-fluid ml-0 pl-0">
+    <div class="row" id="sticky-d">
+        <!-- Video Holder -->
+        <div class="col-md-9 bg-black px-0" id="video-box">
+            <div class="container videoContainer embed-responsive embed-responsive-16by9 px-3">
+                <iframe class="embed-responsive-item" src="{{mainfile.videolink}}" allowfullscreen></iframe>
+            </div>
+            <hr>
+        </div>
+        <!-- Course content holder -->
+        <div class="col-md-3 px-0" id="course-content-box">
+            <div class="py-2 px-3 bg-lgrey">
+                <h5> Chapter: {{mainfile.chapter}} <i class="mx-2 fas fa-plus" id="toggleCourse"></i></h5>
+            </div>
+            <div id="content-box">
+                {% for object in objects %}
+                <ul class="content-holder">
+                    <a href="/app/class/{{object.subject}}-{{object.chapter}}-{{object.group}}-{{object.topicname}}">
+                        <li class="content-holder-item  ">
+                            {{object.topicname}}
+                            <div class="mx-3">
+                                <i class="far fa-play-circle"></i> {{object.videosource}}
+                            </div>
+                        </li>
+                    </a>
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="col-md-9 bg-black px-0" id="video-box2">
+        <div class="other bg-light">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab"
+                        aria-controls="overview" aria-selected="true">Overview</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="qna-tab" data-toggle="tab" href="#qna" role="tab" aria-controls="qna"
+                        aria-selected="false">Q&A</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="resources-tab" data-toggle="tab" href="#resources" role="tab"
+                        aria-controls="resources" aria-selected="false">Files</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="announcements-tab" data-toggle="tab" href="#announcements" role="tab"
+                        aria-controls="announcements" aria-selected="false">Announcements</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show mx-4 mt-3 active" id="overview" role="tabpanel"
+                    aria-labelledby="overview-tab">
+                    <div class="container clearfix py-2 px-0">
+                        <h3 class="mb-3">
+                        </h3>
+                        {{mainfile.topiccontent|safe}}
+                        {% comment %} <p><img src="/static/common/uploads/continue.png"
+                                class="img-fluid img-responsive mx-auto d-block" width="65%"></p> {% endcomment %}
+                        <pre class='language-c'><code>{{mainfile.prismdisplay}}</code></pre>
+                        <!-- class making credit -->
+                        <strong>Class Credits: </strong><a target="_blank" style="text-decoration: none;"
+                            href="https://www.youtube.com/channel/UCeVMnSShP_Iviwkknt83cww">Code With Harry</a>
+                        <!-- next previ pages -->
+                        <div class="my-4 d-flex justify-content-between">
+                            <a class="btn btn-danger" href="#">&larr;
+                                Previous </a>
+                            <a class="btn btn-danger" href="#">Next
+                                &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade mx-4 mt-3" id="qna" role="tabpanel" aria-labelledby="qna-tab">
+                    <div class="container">
+                        <h2>Comments({{comments|length}})</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form action="/app/postcomment" method="POST">
+                                    {% csrf_token %}
+                                    <input type="text" rows="3" cols="3" class="form-control" id="comment"
+                                        name='comment' required>
+                                    <input type="hidden" name="postSno" id="postSno" value="{{mainfile.sno}}">
+                                    <input type="hidden" name="urltoback" id="urltoback" value="{{ request.META.PATH_INFO }}">
+                                    <button class="btn btn-success mt-1" type="submit">POST</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% for item in comments %}
+                        <div class="row my-3">
+                            <div class="col-md-1">
+                                <img class="w-100 rounded-circle img-fluid border border-dark rounded"
+                                    src='{% static "/app/additional/commentlogo.png" %}' alt="">
+                            </div>
+                            <div class="col-md-10">
+                                <strong>{{item.user.username}}</strong> <span class="badge badge-dark" style="background-color: darkblue;"><em>{{item.timestamp|naturaltime}}</em>
+                                </span>
+                                <p>{{item.comment}}</p>
+                                {% for reply in repDict|get_val:item.sno %}
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <img class="w-100 rounded-circle img-fluid border border-dark rounded"
+                                        src='{% static "/app/additional/commentlogo.png" %}' alt="">
+                                    </div>
+                                    <div class="col-md-10">
+                                        <strong>{{reply.user}}</strong> <span
+                                            class="badge badge-dark" style="background-color: darkblue;"><em>{{reply.timestamp|naturaltime}}</em></span>
+                                        <p>{{reply.comment}}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <div class="reply">
+                                    <p>
+                                        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                                            data-target="#replybox{{item.sno}}" aria-expanded="false"
+                                            aria-controls="replybox{{item.sno}}">
+                                            Reply
+                                        </button>
+                                    </p>
+                                    <div class="collapse" id="replybox{{item.sno}}">
+                                        <div class="card card-body">
+                                            <form action="/app/postcomment" method="POST">
+                                                {% csrf_token %}
+                                                <input type="text" rows="3" cols="30" class="form-control" id="comment"
+                                                    name='comment' required>
+                                                <input type="hidden" name="parentSno" id="postSno" value="{{item.sno}}">
+                                                <input type="hidden" name="postSno" id="postSno" value="{{mainfile.sno}}">
+                                                <input type="hidden" name="urltoback" id="urltobackreply" value="{{ request.META.PATH_INFO }}">
+                                                <button class="btn btn-sm btn-success mt-1" type="submit">Reply</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane fade mx-4 mt-3" id="resources" role="tabpanel" aria-labelledby="resources-tab">
+                    <div class="container px-0">
+                        <h4>Resources</h4>
+                        <p>Nothing to Download</p>
+                    </div>
+                </div>
+                <div class="tab-pane fade mx-4 mt-3" id="announcements" role="tabpanel"
+                    aria-labelledby="announcements-tab">
+                    <div class="container">
+                        <h4>Course Announcements</h4>
+                        <p>
+                            {{mainfile.announcement}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script defer src="{% static '/app/prism/prism.js' %}"></script>
+<script>
+    function disableScrolling() {
+        console.log("Disable scrolling");
+        let x = window.scrollX;
+        let y = window.scrollY;
+        window.onscroll = function () { window.scrollTo(x, y); };
+    }
+
+    function enableScrolling() {
+        console.log("Enable scrolling");
+        window.onscroll = function () { };
+    }
+    // Add copy button
+    let pres = document.getElementsByTagName('pre');
+    Array.from(pres).forEach((element2) => {
+        let element = document.createElement('button');
+        element.setAttribute('class', 'btn btn-sm btn-danger');
+        element.innerHTML = 'Copy';
+        element.style.float = 'right';
+
+        element.addEventListener('click', (e) => {
+            e.preventDefault();
+            disableScrolling();
+            console.log(e)
+            let x = window.screenX;
+            let y = window.screenY;
+
+            element.innerHTML = 'Copied!';
+            let tarea = document.createElement('textarea');
+            tarea.innerHTML = element.parentElement.children[1].innerText;
+            document.body.append(tarea);
+            tarea.focus();
+            tarea.select();
+            document.execCommand('copy');
+            tarea.style.display = 'none';
+            setTimeout(() => {
+                element.innerHTML = 'Copy';
+            }, 2000);
+            setTimeout(() => {
+                enableScrolling();
+            }, 20);
+        })
+        element2.insertBefore(element, element2.children[0]);
+    })
+
+</script>
+
+<script>
+    courseContainer = document.querySelector('#content-box');
+    stickyD = document.getElementById('sticky-d')
+    toggleCourse.addEventListener('click', () => {
+        console.log('click');
+        box = document.querySelector('#course-content-box');
+        // Opening the container
+        if (!box.classList.contains('openCourseHeight')) {
+            courseContainer.style.visibility = 'visible';
+            box.classList.add('openCourseHeight');
+            toggleCourse.classList.add('fa-minus');
+            toggleCourse.classList.remove('fa-plus');
+            stickyD.classList.remove('position-sticky')
+            stickyD.classList.add('position-static')
+            stickyD.scrollIntoView();
+        }
+        else {
+            courseContainer.style.visibility = 'hidden';
+            box.classList.remove('openCourseHeight');
+            toggleCourse.classList.remove('fa-minus');
+            toggleCourse.classList.add('fa-plus');
+            stickyD.classList.remove('position-static')
+            stickyD.classList.add('position-sticky')
+
+        }
+    })
+</script>
+
+<script>
+    // Making all images inside main box responsive and adding border
+    let mainVidBox = document.getElementById('video-box2')
+    Array.from(mainVidBox.getElementsByTagName('img')).forEach((element, ind) => {
+        element.classList.add('img-fluid')
+        element.classList.add('border');
+        element.classList.add('border-dark');
+        element.classList.add('rounded')
+    })
+
+
+</script>
+<script src="https://kit.fontawesome.com/433888fe69.js" crossorigin="anonymous" defer></script>
+{% endblock body %}

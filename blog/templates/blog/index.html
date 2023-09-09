@@ -1,0 +1,38 @@
+{% extends 'blog/base.html' %}
+{% block title %}Blogs by learnskills
+{% endblock title %}
+{% block active1 %}active
+{% endblock active1 %}
+{% block body %}
+<div class="container mt-2">
+  <div class="jumbotron">
+    <h1 class="display-4"><strong>Learn With Free Books and videos</strong></h1>
+    <p class="lead">Learn to code with learnskills using free pdf books and discuss with team using discussion section
+      provided by learnskills.</p>
+    <hr class="my-4">
+    <p><em>“Being a student is easy. Learning requires actual work.”</em></p>
+    <p><strong>— William Crawford</strong></p>
+    <a class="btn btn-primary btn-lg" href="/blog/blogs" role="button">Start Now</a>
+  </div>
+</div>
+<div class="container">
+  <div class="row mb-2">
+    {% for article in articles %}
+    <div class="col-md-6">
+      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-primary">{{article.category}}</strong>
+          <h3 class="mb-0">{{article.title}}</h3>
+          <div class="mb-1 text-muted">{{article.published}}</div>
+          <p class="card-text mb-auto">{{article.shortdesc|slice:":65"}}</p>
+          <a href="/blog/article/{{article.slug}}" class="btn btn-sm btn-outline-danger">Continue reading</a>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+          <img src="/media/{{article.image}}" alt="img" width="200" height="250">
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock body %}

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@387&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static '/studywithus/favicon.ico' %}" type="image/x-icon">
+    <title>{% block title %}
+        {% endblock title %} | Learn from experts,Improve knowledge with mock tests</title>
+    <!-- <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script> -->
+    <!-- <script>
+        var OneSignal = window.OneSignal || [];
+        var initConfig = {
+            appId: "affde21c-c700-4f7b-8780-aaae71bda294",
+            notifyButton: {
+                enable: true
+            },
+            allowLocalhostAsSecureOrigin: true,
+        };
+        OneSignal.push(function () {
+            OneSignal.SERVICE_WORKER_PARAM = { scope: '/static/' };
+            OneSignal.SERVICE_WORKER_PATH = 'static/OneSignalSDKWorker.js'
+            OneSignal.SERVICE_WORKER_UPDATER_PATH = 'static/OneSignalSDKUpdaterWorker.js'
+            OneSignal.init(initConfig);
+        });
+    </script> -->
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px #007bff;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 30px;
+        }
+
+        /* Footer*/
+        .blog-footer {
+            padding: 2.5rem 0;
+            color: #999;
+            text-align: center;
+            background-color: #e9ecef;
+            border-top: .05rem solid #e5e5e5;
+        }
+
+        .blog-footer p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+    <style>
+        .jumbotron {
+            padding: 80px 20px;
+            background-color: #e9ecef;
+        }
+
+        .badge-success {
+            color: #fff;
+            background-color: #28a745
+        }
+
+        a.badge-success:focus,
+        a.badge-success:hover {
+            color: #fff;
+            background-color: #1e7e34
+        }
+
+        a.badge-success.focus,
+        a.badge-success:focus {
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(40, 167, 69, .5)
+        }
+    </style>
+    {% block extracss %}
+    {% endblock extracss %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Open Book</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% block active1 %}
+                        {% endblock active1 %}" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block active2 %}
+                        {% endblock active2 %}" href="/about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% block active3 %}
+                        {% endblock active3 %}" href="/contact">Contact Us</a>
+                    </li>
+                </ul>
+                <button type="button" class="btn btn-secondary mx-1" data-container="body" id="notifications" data-toggle="popover" data-placement="bottom" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-html='true' onclick="loadnotifications()">
+                    Notifications
+                </button>
+                <a href="/app" class="btn btn-success" type="submit">Student</a>
+                <a href="/staffpanel" class="btn btn-danger mx-1" type="submit">Staff</a>
+            </div>
+        </div>
+    </nav>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% block body %}
+    {% endblock body %}
+    <footer class="blog-footer">
+        <p>Operated by Open Book Team<a href="https://learninteam.com/" target="_blank"> Open Book </a> 
+            {% comment %} by <a
+                href="https://instagram.com/computewithlucifer" target="_blank">Computewithlucifer</a>. {% endcomment %}
+            </p>
+        <p>
+        <p>&copy; Copyright All Rights Reserved Open Book</p>
+        <p><a href="#" class="badge badge-success">Privacy Policies</a><a href="#"
+                class="badge badge-success mx-1">Terms Conditions</a></p>
+        <a href="#">Back to top</a>
+        </p>
+    </footer>
+    <!-- google rechaptcha code -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+        integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+        crossorigin="anonymous"></script>
+    {% block jss %}
+    {% endblock jss %}
+    <script>
+        function loadnotifications(){
+            var msg = ''
+            var msg = msg + '<h6 class="text-secondary text-center">Notifications From management desk</h6>'
+            document.getElementById('notifications').setAttribute('data-content', msg);
+            $('#notifications').popover();
+        }
+    </script>
+</body>
+</html>

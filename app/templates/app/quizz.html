@@ -1,0 +1,185 @@
+{% extends "app/base.html" %}
+{% block title %}Quizz
+{% endblock title %}
+{% block body %}
+{% load static %}
+<style>
+    .badge-arrange {
+        margin-top: 7px;
+    }
+</style>
+<div class="container">
+    <h1 class="text-center">{{chapter}} Quizz</h1>
+    <div id="timetopic">
+        <h4 id="topic" class="float-left"></h4>
+        <h4 id="timer" class="float-right"></h4>
+    </div>
+    <div class="row quizzdata mt-5" id="quizzdata">
+        <div class="col-md-12" id="quizzcontainer">
+            <ul class="list-group" id="topicsdisplay">
+            </ul>
+        </div>
+    </div>
+</div>
+<form action="#" id="quizzloader" method="POST" hidden>
+    {% csrf_token %}
+    <input type="hidden" name="subject" value="{{subject}}">
+    <input type="hidden" name="chapter" value="{{chapter}}">
+</form>
+<audio id="myAudio" controls hidden>
+    <source src="{% static 'exam/timeup.mp3' %}" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+{% endblock body %}
+{% block jss %}
+<script>
+    $('#topic').empty()
+    $('#timer').empty()
+    $('#topicsdisplay').empty()
+    $(document).ready(function (event) {
+        $('#topicsdisplay').empty()
+        var formdata = {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            'subject': $('input[name=subject]').val(),
+            'chapter': $('input[name=chapter]').val(),
+        };
+        $.ajax({
+            type: "POST",
+            url: '/exam/getquizz',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                data = JSON.parse(data)
+                updates = data[0]
+                for (i = 0; i < updates.length; i++) {
+                    let time = updates[i]['time']
+                    let topic = updates[i]['topic']
+                    let quizzstatus = updates[i]['status']
+                    let statusmessage = updates[i]['statusmessage']
+                    if (topic == 'no topic') {
+                        mystr = `<li class="list-group-item"><strong>No Quizz For this chapter yet</strong><span class="badge badge-pill badge-primary float-right mx-1 badge-arrange" style="color:black;">Please Check again after time</span></li>`
+                        $('#topicsdisplay').append(mystr);
+                        break;
+                    }
+                    mystr = `<li class="list-group-item"><strong>${topic}</strong><button id="${i}" onclick="startexam('${topic}')" class="float-right btn btn-sm btn-outline-success" type="submit" ${quizzstatus}> ${statusmessage} </button><span class="badge badge-pill badge-primary float-right mx-1 badge-arrange" style="color:black;">${time}</span></li>`
+                    $('#topicsdisplay').append(mystr);
+                }
+            });
+    });
+    function startexam(i) {
+        console.log('exam started', i);
+        $('#quizzcontainer').empty()
+        var formdata = {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            'subject': $('input[name=subject]').val(),
+            'chapter': $('input[name=chapter]').val(),
+            'topic': i,
+        };
+        $.ajax({
+            type: "POST",
+            url: '/exam/getquizzcontent',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                data = JSON.parse(data)
+                updates = data[0]
+                $('#quizzdata').empty();
+                console.log(updates.length)
+                if (updates.length > 1) {
+                    let headdata = `<form action="/exam/quizzsubmit" id="quizzform" method="POST">{% csrf_token %}
+                    <input type="hidden" name="subject" value="{{subject}}">
+                    <input type="hidden" name="chapter" value="{{chapter}}">
+                    <input type="hidden" name="topic" value="${i}">
+                    <div class="col-md-12" id="quizzcontainer">
+                    <ul class="list-group" id="topicsdisplay"></ul></div><button class="btn btn-success" type="submit">Submit</button></form>`
+                    $('#quizzdata').append(headdata);
+                    for (i = 0; i < updates.length; i++) {
+                        let time = updates[i]['time']
+                        let topic = updates[i]['topic']
+                        let question = updates[i]['question']
+                        let option1 = updates[i]['option1']
+                        let option2 = updates[i]['option2']
+                        let option3 = updates[i]['option3']
+                        let option4 = updates[i]['option4']
+                        let marks = updates[i]['marks']
+                        mystr = `<div class="row">
+                        <div class="col-md-12">
+                            <p style=""><strong>Question ${i + 1}: </strong><span id='question${i + 1}'>${question}<span class='float-right'>
+                                <strong>${marks}</strong>
+                            </span></p>
+                            <input type="hidden" name="question${i + 1}" id="question${i + 1}" value="${question}">
+                            <input type="hidden" name="marks${i + 1}" id="marks${i + 1}" value="${marks}">
+                            <input type="hidden" name="urltoback" id="urltobackreply" value="{{ request.META.PATH_INFO }}">
+                        </div>
+                        <div class="col-md-12 ml-4 pl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="answer${i + 1}" id="exampleRadios1+${i + 1}" value="${option1}" required>
+                                <label class="form-check-label" for="exampleRadios1">
+                                    ${option1}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="answer${i + 1}" id="exampleRadios2+${i + 1}" value="${option2}" required>
+                                <label class="form-check-label" for="exampleRadios2">
+                                    ${option2}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="answer${i + 1}" id="exampleRadios3+${i + 1}" value="${option3}" required>
+                                <label class="form-check-label" for="exampleRadios3">
+                                    ${option3}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="answer${i + 1}" id="exampleRadios4+${i + 1}" value="${option4}" required>
+                                <label class="form-check-label" for="exampleRadios4">
+                                    ${option4}
+                                </label>
+                            </div>
+                        </div>
+                        </div>
+                        </div><hr>`
+                        $('#quizzcontainer').append(mystr);
+                    }
+                }
+                else{
+                    var mystr = `<h4>Sorry no quizz published</h4>`
+                    $('#quizzdata').append(mystr);
+                }
+            });
+        $('#topic').empty()
+        $('#topic').append(`<strong>Topic: </strong><span>${i}</span>`)
+        $('#timer').empty()
+        var x = document.getElementById("myAudio");
+        function playAudio() {
+            x.play();
+        }
+        function pauseAudio() {
+            x.pause();
+        }
+        var timeleft = 1800;
+        var downloadTimer = setInterval(function () {
+            if (timeleft == 300) {
+                playAudio();
+                document.getElementById("timer").innerHTML = timeleft + " Seconds Remaining";
+            }
+            else if (timeleft <= 1) {
+                clearInterval(downloadTimer);
+                document.getElementById("timer").innerHTML = "Time Over";
+                location.reload(true);
+            }
+            else {
+                if (timeleft % 60 == 0) {
+                    document.getElementById("timer").innerHTML = timeleft / 60 + " Minutes Remaining";
+                }
+                else {
+                    document.getElementById("timer").innerHTML = timeleft + " Seconds Remaining";
+                }
+            }
+            timeleft -= 1;
+        }, 1000);
+    }
+</script>
+{% endblock jss %}

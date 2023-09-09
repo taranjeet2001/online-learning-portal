@@ -1,0 +1,46 @@
+{% extends 'blog/base.html' %}
+{% block title %}Search Results
+{% endblock title %}
+{% block body %}
+<div class="container mt-2">
+    {% if checker %}
+    <h2 class="pb-3">Search Result for:- <em>{{query}}</em></h2>
+    <div class="row mb-2">
+        {% for article in articles %}
+        <div class="col-md-6">
+            <div
+                class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">{{article.category}}</strong>
+                    <h3 class="mb-0">{{article.title}}</h3>
+                    <div class="mb-1 text-muted">{{article.published}}</div>
+                    <p class="card-text mb-auto">{{article.shortdesc|slice:":65"}}</p>
+                    <a href="/blog/article/{{article.slug}}" class="btn btn-sm btn-outline-danger">Continue reading</a>
+                </div>
+                <div class="col-auto d-none d-lg-block">
+                    <img src="/media/{{article.image}}" alt="img" width="200" height="250">
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <P>Your search - <strong>{{query}}</strong>... - did not match any documents.</P>
+    <p>Suggestions:</p>
+    <ul>
+        <li>
+            Make sure that all words are spelled correctly.
+        </li>
+        <li>
+            Try different keywords.
+        </li>
+        <li>
+            Try more general keywords.
+        </li>
+        <li>
+            Try fewer keywords.
+        </li>
+    </ul>
+    {% endif %}
+</div>
+{% endblock body %}

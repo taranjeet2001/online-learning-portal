@@ -1,0 +1,81 @@
+{% extends "app/base.html" %}
+{% block title %}Subjects
+{% endblock title %}
+{% block active4 %}active
+{% endblock active4 %}
+{% block body %}
+<div class="container">
+    <div class="row mt-2">
+        <div class="col-md-2">
+            <form action="#" id="trackerForm" method="POST">
+                {% csrf_token %}
+                <div id="btndes">
+                    <button type="submit" id="subfetch"class="btn btn-primary">Fetch Subjects</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8" style="padding-top: 8px;">
+            <strong>Note: </strong><span>Please click button to fetch subjects</span>
+        </div>
+    </div>
+    <hr>
+    <div class="row m-2" id="items">
+    </div>
+</div>
+{% endblock body %}
+{% block jss %}
+<script>
+$( document ).ready(function() {
+    $('#subfetch').click()
+});
+    $('#items').empty()
+    $('#trackerForm').submit(function (event) {
+        $('#items').empty()
+        $('#btndes').empty()
+        $('#btndes').append(`<button class="btn btn-primary">
+                <i class="fa fa-spinner fa-spin"></i>Loading
+            </button>`)
+        var formdata = {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        };
+        $.ajax({
+            type: "POST",
+            url: '/app/fetchsubjects',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                data = JSON.parse(data)
+                updates = data[0]
+                for (i = 0; i < updates.length; i++) {
+                    let subject = updates[i]['subject']
+                    let group = updates[i]['group']
+                    let name = updates[i]['name']
+                    mystr = `    <div class="col-md-12">
+      <div class="row no-gutters border rounded flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col-md-7 p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-primary">Group: ${group}</strong>
+          <h3 class="mb-0">Subject: ${subject}</h3>
+          <div class="mb-1 text-muted">Name: Prof ${name}</div>
+        </div>
+        <div class="col-md-4">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Action
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/app/chapters/${group}-${subject}-${name}">Chapters</a>
+                <a class="dropdown-item" href="/app/msts">MST</a>
+            </div>
+            </div>
+            </div>
+             </div>`
+                    $('#items').append(mystr);
+                }
+                $('#btndes').empty()
+                $('#btndes').append(`<button type="submit" class="btn btn-primary">Fetch Subjects</button>`)
+            });
+        event.preventDefault();
+    });
+</script>
+{% endblock jss %}

@@ -1,0 +1,163 @@
+{% extends 'blog/base.html' %}
+{% block title %}{{article.title|slice:":10"}}...
+{% endblock title %}
+{% block active2 %}active
+{% endblock active2 %}
+{% block body %}
+{% load static %}
+{% load humanize %}
+{% load get_dict %}
+<!-- BEGIN SHAREAHOLIC CODE -->
+<link rel="preload" href="https://cdn.shareaholic.net/assets/pub/shareaholic.js" as="script" />
+<meta name="shareaholic:site_id" content="f5670ccffc9804d8eb9ac57c7037a4d1" />
+<script data-cfasync="false" async src="https://cdn.shareaholic.net/assets/pub/shareaholic.js"></script>
+<!-- END SHAREAHOLIC CODE -->
+<main role="main" class="container mt-3">
+    <div class="row">
+        <div class="col-md-8 blog-main">
+            <div class="blog-post">
+                <h2 class="blog-post-title">{{article.title}}</h2>
+                <p class="blog-post-meta">{{article.updated}} by <a href="#">{{article.author}}</a></p>
+                <div>
+                    {{article.content|safe}}
+                </div>
+            </div><!-- /.blog-post -->
+            <div class="text-center">
+                <!-- Button trigger modal -->
+                <p><strong>Click Read Now </strong><em>Required pdf is attached start reading now</em></p>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#readbook">
+                    Read Now
+                </button>
+            </div>
+            <div class="my-4 d-flex justify-content-between">
+                <a class="btn btn-primary" href="#">&larr;
+                    Previous </a>
+                <a class="btn btn-success" href="#">Next
+                    &rarr;</a>
+            </div>
+
+        </div><!-- /.blog-main -->
+
+        <aside class="col-md-4 blog-sidebar">
+            <div class="p-4 mb-3 bg-light rounded">
+                <h4 class="font-italic">About</h4>
+                <p>“Perfection is achieved, not when there is nothing more to add, but when there is
+                    nothing left to take away.”</p>
+                <p class="text-right">
+                    <strong>- Antoine de Saint-Exupery</strong>
+                </p>
+            </div>
+
+            <div class="p-4">
+                <h4 class="font-italic">Recent Blogs</h4>
+                <ol class="list-unstyled mb-0">
+                    <li><a href="#">March 2014</a></li>
+                </ol>
+            </div>
+        </aside><!-- /.blog-sidebar -->
+    </div><!-- /.row -->
+</main>
+<!-- Modal -->
+<div class="modal fade" id="readbook" tabindex="-1" role="dialog" aria-labelledby="readbook" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="readbook">{{article.title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if article.pdffile_source == 'Media' %}
+                <div id="pdf">
+                    <object width="100%" height="650" type="application/pdf"
+                        data="/media/{{article.pdffile}}#zoom=85&scrollbar=0&toolbar=0&navpanes=0" id="pdf_content"
+                        style="pointer-events: none;">
+                        <p>Pdf cannot be rendered this may be due to use of outdated browser or you may using external
+                            downloader.</p>
+                    </object>
+                </div>
+                <!-- <embed src="/media/{{article.pdffile}}" frameborder="0" height="650px" width="100%"> -->
+                {% else %}
+                <iframe src="{{article.pdflink}}" frameborder="0" height="650px" width="100%"></iframe>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mb-2">
+    <h2>Comments({{comments|length}})</h2>
+    {% if user.is_authenticated %}
+    <div class="row">
+        <div class="col-md-6">
+            <form action="/blog/postcomment/" method="POST">
+                {% csrf_token %}
+                <input type="text" rows="3" cols="3" class="form-control" id="comment" name='comment' required>
+                <input type="hidden" name="postSno" id="postSno" value="{{article.sno}}">
+                <button class="btn btn-success mt-1" type="submit">POST</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <p><strong>Please signin/up for comment</strong></p>
+    <a href="/app/userlogin" class="btn btn-outline-danger mx-1">
+        Login
+    </a>
+    <a href="/app/usersignup" class="btn btn-outline-success">
+        Sign Up
+    </a>
+    {% endif %}
+    <hr>
+    {% for item in comments %}
+    <div class="row my-3">
+        <div class="col-md-1">
+            <img class="rounded mx-auto d-block w-100 p-2" src='{% static "/blog/user_ico/user1.png" %}' alt="">
+        </div>
+        <div class="col-md-10">
+            <strong>{{item.user.username}}</strong> <span
+                class="badge badge-secondary"><em>{{item.timestamp|naturaltime}}</em></span>
+            <p>{{item.comment}}</p>
+            {% for reply in repDict|get_val:item.sno %}
+            <div class="row">
+                <div class="col-md-1">
+                    <img class="rounded mx-auto d-block w-100 p-2" src='{% static "/blog/user_ico/user1.png" %}' alt="">
+                </div>
+                <div class="col-md-10">
+                    <strong>{{reply.user}}</strong> <span
+                        class="badge badge-secondary"><em>{{reply.timestamp|naturaltime}}</span></em>
+                    <p>{{reply.comment}}</p>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="reply">
+                <p>
+                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                        data-target="#replybox{{item.sno}}" aria-expanded="false" aria-controls="replybox{{item.sno}}">
+                        Reply
+                    </button>
+                </p>
+                <div class="collapse" id="replybox{{item.sno}}">
+                    <div class="card card-body">
+                        {% if user.is_authenticated %}
+                        <form action="/blog/postcomment/" method="POST">
+                            {% csrf_token %}
+                            <input type="text" rows="3" cols="30" class="form-control" id="comment" name='comment'
+                                required>
+                            <input type="hidden" name="parentSno" id="postSno" value="{{item.sno}}">
+                            <input type="hidden" name="postSno" id="postSno" value="{{article.sno}}">
+                            <button class="btn btn-sm btn-success mt-1" type="submit">Reply</button>
+                        </form>
+                        {% else %}
+                        <strong>Please Login/Signup for reply</strong>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock body %}

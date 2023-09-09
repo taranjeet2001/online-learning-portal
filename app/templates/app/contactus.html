@@ -1,0 +1,62 @@
+{% extends "app/base.html" %}
+{% block title %}Raise Request
+{% endblock title %}
+{% block active3 %}active
+{% endblock active3 %}
+{% block body %}
+<div class="container mt-2">
+    <h2>Contact Form</h2>
+    <form class="row g-3" method="POST" action="/app/contactform">
+        {% csrf_token %}
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="useremail" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" id="useremail" value="{{request.user.email}}"
+                        readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="fullname" class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-control" id="fullname" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="RollNum" class="form-label">Roll No</label>
+                    <input type="text" class="form-control" name="rollno" id="RollNum" placeholder="Eg. 191005">
+                </div>
+                <div class="col-6">
+                    <label for="requestto" class="form-label">Contact Request To</label>
+                    <select type="text" class="form-control" id="requestto" name="requestto">
+                        <option>.......</option>
+                        <option>Admin</option>
+                        <option>Technical Team</option>
+                        <option>Professors</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="usermessage">Message</label>
+                        <textarea class="form-control" id="usermessage" rows="3" name="usermessage"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    <div class="g-recaptcha" data-sitekey="6LdFKrMZAAAAAO1vuSht0ZBYoRUgyKFG0djDPO2X"></div>
+                </div>
+            </div>
+            <div class="row mt-3 pb-3">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary" {{disabled}}>Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            map
+        </div>
+    </form>
+</div>
+{% endblock body %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}About Us
+{% endblock title %}
+{% block active2 %}active
+{% endblock active2 %}
+{% block extracss %}
+{% endblock extracss %}
+{% block body %}
+{% load static %}
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4">About Us</h1>
+        <p class="lead">Website is made by group of students of BBSBEC fatehgarh Sahib to make easy for students learn
+            online and attend for lectures on time.</p>
+        <hr class="my-4">
+        <p>All the copyright issues can be resolved under &copy; copyright learnskills Please contact Team using
+            official email address.</p>
+        <p><strong>Official Email Address </strong><a class="btn btn-primary"
+                href="mailto: skillslearn08@gmail.com">Send Now</a></p>
+        <a class="btn btn-success btn-lg" href="/app" role="button">Start Learning</a>
+    </div>
+</div>
+<div class="container">
+    <div class="row mt-4">
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded" style="width: 18rem;">
+            <img src="{% static '/studywithus/technicalteam.png' %}" class="padded card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">Technical Team</h5>
+                <p class="card-text text-center">Having problem contact our technical team now we will happy to resolve your issues</p>
+                <a href="#" class="btn btn-primary d-block">Contact Now</a>
+            </div>
+        </div>
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded" style="width: 18rem;">
+            <img src="{% static '/studywithus/admincontact.png' %}" class="padded card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">Contact Admin</h5>
+                <p class="card-text text-center">Issues not being resolved contact our admin now.</p>
+                <a href="https://instagram.com/computewithlucifer" class="btn btn-primary d-block">Contact Admin</a>
+            </div>
+        </div>
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded" style="width: 18rem;">
+            <img src="{% static '/studywithus/bugfix.jpg' %}" class="padded card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title text-center">Bugs Bounty</h5>
+                <p class="card-text text-center">Have You found bug we welcome you. Share with our team you will be rewarded</p>
+                <a href="#" class="btn btn-primary d-block">Submit</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock body %}

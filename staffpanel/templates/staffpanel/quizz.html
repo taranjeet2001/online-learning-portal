@@ -1,0 +1,115 @@
+{% extends "staffpanel/base.html" %}
+{% block title %}Quizz
+{% endblock title %}
+{% block active2 %}
+active
+{% endblock active2 %}
+{% block body %}
+{% load static %}
+<style>
+    .badge-arrange {
+        margin-top: 7px;
+    }
+</style>
+{% comment contentfor ajax %} some data for ajax {% endcomment %}
+<p id="group" hidden>{{group}}</p>
+<p id="subject" hidden>{{subject}}</p>
+<p id="chapter" hidden>{{chapter}}</p>
+<div class="container mt-2">
+    <h1 class="text-center">{{subject}} Quizz</h1>
+    <hr>
+    <div class="row quizzdata mt-1" id="quizzdata">
+        <div id="formdata">
+            <form action="#" id="topicadder" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="newchapter">Add Topic</label>
+                    <input type="text" class="form-control" id="newchapter" name="topic">
+                </div>
+                <div id="addtopic" class="mt-1">
+                    <button type="submit" class="btn btn-primary mb-2">Add topic</button>
+                </div>
+                <div id="insertmessage">
+                </div>
+            </form>
+        </div>
+        <div class="col-md-12" id="quizzcontainer">
+            <ul class="list-group" id="topicsdisplay">
+            </ul>
+        </div>
+    </div>
+    <div id="questionshow">
+
+    </div>
+</div>
+{% endblock body %}
+{% block jss %}
+<script>
+    $('#topic').empty()
+    $('#topicsdisplay').empty()
+    $(document).ready(function (event) {
+        $('#topicsdisplay').empty()
+        var formdata = {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            'subject': $('#subject').text(),
+            'chapter': $('#chapter').text(),
+            'group': $('#group').text(),
+        };
+        $.ajax({
+            type: "POST",
+            url: '/exam/showquizz',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                data = JSON.parse(data)
+                updates = data[0]
+                for (i = 0; i < updates.length; i++) {
+                    let time = updates[i]['time']
+                    let topic = updates[i]['topic']
+                    let quizzstatus = updates[i]['status']
+                    let statusmessage = updates[i]['statusmessage']
+                    if (topic == 'no topic') {
+                        mystr = `<li class="list-group-item"><strong>No Quizz added for this chapter yet</strong><span class="badge badge-pill badge-primary float-right mx-1 badge-arrange" style="color:black;">Please add some topics first</span></li>`
+                        $('#topicsdisplay').append(mystr);
+                        break;
+                    }
+                    mystr = `<li class="list-group-item"><strong>${topic}</strong><a id="${i}" class="float-right btn btn-sm btn-outline-success" type="submit" href="/staffpanel/addquiz/${$('#subject').text()}-${$('#chapter').text()}-${$('#group').text()}-${topic}">Add Questions</a><a id="${i}" class="float-right btn btn-sm btn-success mx-1" type="submit" href="/staffpanel/quizzresult/${$('#subject').text()}-${$('#chapter').text()}-${$('#group').text()}-${topic}">Result</a><span class="badge badge-pill badge-primary float-right mx-1 badge-arrange" style="color:black;">${time}</span></li>`
+                    $('#topicsdisplay').append(mystr);
+                }
+            });
+    });
+    $('#topicadder').submit(function (event) {
+        $('#addtopic').empty()
+        $('#insertmessage').empty()
+        $('#addtopic').append(`<button class="btn btn-primary mb-2">
+                <i class="fa fa-spinner fa-spin"></i>Adding
+            </button>`)
+        var formdata = {
+            'group': $('#group').text(),
+            'subject': $('#subject').text(),
+            'chapter': $('#chapter').text(),
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            'topic': $('input[name=topic]').val()
+        };
+        $.ajax({
+            type: "POST",
+            url: '/exam/pushquizztopic',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                if (data == 'success') {
+                    $('#insertmessage').append(`<strong>Note: </strong><span class="text-success">Added successfully wait while reload</span>`)
+                }
+                else {
+                    $('#insertmessage').append(`<strong>Note: </strong><span class="text-danger">Faild to Add please try again</span>`)
+                }
+                $('#addtopic').empty()
+                $('#addtopic').append(`<button type="submit" class="btn btn-primary">Add topic</button>`)
+            });
+        event.preventDefault();
+        location.reload(true);
+    });
+</script>
+{% endblock jss %}

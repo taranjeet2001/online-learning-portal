@@ -1,0 +1,98 @@
+{% extends "staffpanel/base.html" %}
+{% block title %}Staff Sign Up
+{% endblock title %}
+{% block body %}
+<div class="container mt-2">
+    <form method="POST" action="#" id="chapteradder">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="semester">Semester</label>
+                    <select class="form-control" id="semester" name="semester">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="group">Group</label>
+                    <select class="form-control" id="group" name="group">
+                        <option>3A1</option>
+                        <option>B2</option>
+                        <option>C3</option>
+                        <option>D4</option>
+                        <option>8E5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select class="form-control" id="subject" name="subject">
+                        <option>Mathematics</option>
+                        <option>Physics</option>
+                        <option>Chemistry</option>
+                        <option>Computer Science</option>
+                        <option>Mathematics II</option>
+                        <option>Mathematics III</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12" id="topicadderbtn">
+                <button class="btn btn-outline-primary">Add Subject</button>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div id="addermessage">
+
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-md-2">
+            <form action="/staffpanel/step2verification" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-lg btn-success">Final Lock</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+{% block jss %}
+<script>
+    $('#addermessage').empty()
+    $('#chapteradder').submit(function (event) {
+        $('#addermessage').empty()
+        $('#topicadderbtn').empty()
+        $('#topicadderbtn').append(`<button class="btn btn-primary">
+                <i class="fa fa-spinner fa-spin"></i>Loading
+            </button>`)
+        var formdata = {
+            'semester': $('select[name=semester]').val(),
+            'group': $('select[name=group]').val(),
+            'subject': $('select[name=subject]').val(),
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        };
+        $.ajax({
+            type: "POST",
+            url: '/staffpanel/subjectaddition',
+            data: formdata,
+            encode: true
+        })
+            .done(function (data) {
+                mystr = `<span class="text-success">${data}</span>`
+                $('#addermessage').append(mystr);
+                $('#topicadderbtn').empty()
+                $('#topicadderbtn').append(`<button class="btn btn-primary">Add Subject</button>`)
+            });
+        event.preventDefault();
+    });
+</script>
+{% endblock jss %}

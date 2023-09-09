@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Open Book
+{% endblock title %}
+{% block active1 %}active
+{% endblock active1 %}
+{% block extracss %}
+{% endblock extracss %}
+{% block body %}
+{% load static %}
+<section class="jumbotron text-center">
+    <div class="container">
+        <img src="{% static '/studywithus/learnskills.png' %}" alt="logo" width="120">
+        <h1 class="jumbotron-heading"><span id="typed"></span></h1>
+        <p class="lead text-muted">Facing problem to study from home so here we have solution for you. Welcome to
+            LearnSkills here experts will teach you and will clear your doubts<br>This website is small attempt to make
+            Learning online very easy for students and easy for professors to manager record online.</p>
+        <p>
+            <a href="/app" class="btn btn-danger my-2">Students</a>
+            <a href="/staffpanel" class="btn btn-success my-2">Professors section</a>
+            <a href="/blog" class="btn btn-primary my-2">Blog</a>
+        </p>
+    </div>
+</section>
+<div class="container-fluid main-container">
+    <div class="row my-4 mx-4">
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded text-center"
+            style="width: 18rem;">
+            <img class="rounded-circle" src="https://www.codewithharry.com/img/logo-blue.png" width="140"
+                height="140">
+            <div class="card-body">
+                <h2>Learn Python, Java, JavaScript, Django In Hindi</h2>
+                <p>
+                    Videos Made by <a href="https://www.youtube.com/channel/UCeVMnSShP_Iviwkknt83cww"
+                        target="_blank">Codewithharry</a> on his official website are shared with you all the content is
+                    free learn watching videos in hindi
+                </p>
+                <p>
+                    <a href="https://www.codewithharry.com/videos/" target="_blank"><button
+                            class="btn btn-outline-danger">Start
+                            Learning »</button></a>
+                </p>
+            </div>
+        </div>
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded text-center"
+            style="width: 18rem;">
+            <img class="rounded-circle"
+                src="https://instagram.flko3-1.fna.fbcdn.net/v/t51.2885-19/s320x320/94517557_715185759293766_2596586555413889024_n.jpg?_nc_ht=instagram.flko3-1.fna.fbcdn.net&_nc_ohc=KbGJL1zPsdwAX9SJzU4&oh=50b835d4c105fbc5fa5ced34df3bebec&oe=5F3F4187"
+                width="140" height="140">
+            <div class="card-body">
+                <h2>Want to develop websites contact Admin</h2>
+                <p>
+                    <em>“Any fool can write code that a computer can understand. Good programmers write code that humans can
+                        understand.”</em>
+                </p>
+                <strong>
+                    – Martin Fowler
+                </strong>
+                <p class="mt-1">
+                    <a href="https://instagram.com/computewithlucifer" target="_blank"><button
+                            class="btn btn-outline-danger">Contact Now »</button></a>
+                </p>
+            </div>
+        </div>
+        <div class="card mx-auto my-2 p-2 align-items-center shadow pt-3 pb-3 mb-5 bg-white rounded text-center"
+            style="width: 18rem;">
+            <img class="rounded-circle" src="{% static '/studywithus/learnskills.png' %}" width="140" height="140">
+            <div class="card-body">
+                <h2>Open Book is initiative to teach students online in professional way</h2>
+                <p>
+                    <em>“First, solve the problem. Then, write the code.”</em>
+                </p>
+                <strong>
+                    – John Johnson
+                </strong>
+                <p class="mt-1">
+                    <a href="/about"><button class="btn btn-outline-danger">Learn More »</button></a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.9/typed.min.js" async defer></script>
+<script>
+    window.onload = function () {
+        var typed = new Typed('#typed', {
+            strings: ["Welcome to LearnSkills", "Learn in team", "Your online classes", "From your professors"],
+            backSpeed: 15,
+            smartBackspace: true,
+            backDelay: 1200,
+            startDelay: 1000,
+            typeSpeed: 25,
+            loop: true,
+        });
+    };
+</script>
+{% endblock body %}
